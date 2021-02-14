@@ -1,0 +1,126 @@
+<!-- 
+用按键事件修改挡板坐标，然后持续重绘挡板，会卡
+用按键事件修改 left/right 状态，然后持续使用 left/right 判断是否重绘挡板时，则不会卡
+
+两个不相关的操作（函数）之间，使用状态（中间变量）产生关系：
+例如按下按键移动挡板时，按帧率重绘 和 按键事件 之间，
+在 按键事件 中使用两个变量 left/right 记录状态，
+在 按帧率重绘 中使用 left/right 决定是否重绘
+
+代码重构过程：
+__main入口
+按正确的顺序对每个部分进行函数封装
+（注意：一定是按照[合适的顺序]，从[小部分]开始，如果不按顺序直接重构大部分代码则很容易出错）
+必要时进行逻辑抽象
+
+逻辑抽象：
+逻辑抽象的时候，有时候可以 先把数据存起来，而不是直接写业务逻辑，更简单一点
+例如按 a/d 向左/右走，抽象为 按键按下 + 执行对应的动作
+
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="id-canvas" width="500" height="400"></canvas>
+
+    <script>
+        var log = console.log;
+
+        var imageFromPath = function (path) {
+            var image = new Image()
+            image.src = path
+            return image
+        }
+
+        var Paddle = function () {
+            var o = {
+                x: 250,
+                y: 300,
+                speed: 8,
+                image: imageFromPath('paddle.png')
+            }
+            o.moveLeft = function () {
+                o.x -= o.speed
+            }
+            o.moveRight = function () {
+                o.x += o.speed
+            }
+            return o
+        }
+
+        var GuaGame = function () {
+            var canvas = document.querySelector('#id-canvas')
+            var context = canvas.getContext('2d')
+
+            var gua = {
+                fps: 1000 / 60,
+                context: context,
+                actions: {},
+                keydowns: {},
+            }
+
+            window.addEventListener('keydown', event => {
+                gua.keydowns[event.key] = true
+            })
+
+            window.addEventListener('keyup', event => {
+                gua.keydowns[event.key] = false
+            })
+
+            gua.registerAction = function (key, callback) {
+                gua.actions[key] = callback
+            }
+
+            var timer = setInterval(() => {
+                // 哪个键被按下则执行对应的回调函数
+                for (var key in gua.keydowns) {
+                    if (gua.keydowns[key] && gua.actions[key]) {
+                        gua.actions[key]()
+                    }
+                }
+                gua.update()
+                context.clearRect(0, 0, canvas.width, canvas.height)
+                gua.draw()
+            }, gua.fps)
+
+            return gua
+        }
+
+        var __main = function () {
+            var gua = GuaGame()
+
+            var paddle = Paddle()
+
+            gua.registerAction('a', function () {
+                paddle.moveLeft()
+            })
+            gua.registerAction('d', function () {
+                paddle.moveRight()
+            })
+
+            gua.update = function () {
+            }
+
+            gua.draw = function () {
+                gua.context.drawImage(paddle.image, paddle.x, paddle.y)
+            }
+        }
+
+        __main()
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="id-canvas" width="500" height="400"></canvas>
+
+    <script>
+        var log = console.log;
+
+        var x = 250
+        var y = 300
+        var speed = 8
+
+        var canvas = document.querySelector('#id-canvas')
+        var context = canvas.getContext('2d')
+        var image = new Image()
+        image.src = 'paddle.png'
+        image.onload = function () {
+            context.drawImage(image, x, y);
+        }
+
+        var left = false
+        var right = false
+        window.addEventListener('keydown', function (event) {
+            if (event.key == 'a') {
+                left = true
+            } else if (event.key == 'd') {
+                right = true
+            }
+        })
+
+        window.addEventListener('keyup', function (event) {
+            if (event.key == 'a') {
+                left = false
+            } else if (event.key == 'd') {
+                right = false
+            }
+        })
+
+        var timer = setInterval(() => {
+            if (left) {
+                x -= speed
+            } else if (right) {
+                x += speed
+            }
+            context.clearRect(0, 0, canvas.width, canvas.height)
+            context.drawImage(image, x, y)
+        }, 1000 / 60)
+
+    </script>
+</body>
+
+</html>
