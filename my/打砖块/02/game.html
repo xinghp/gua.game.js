@@ -1,0 +1,170 @@
+<!-- 
+球碰到边界的计算，引入角度，把问题搞复杂化了
+确定是对的但是运行却不对，这时候应该换个实现思路
+
+先不管函数的实现细节，先把过程写出来：
+例如 ball 先画出来，按 f 键，再 move，这个过程的函数，先用 log 占位，之后再进行实现
+
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="id-canvas" width="500" height="400"></canvas>
+
+    <script>
+        var log = console.log;
+
+        var imageFromPath = function (path) {
+            var image = new Image()
+            image.src = path
+            return image
+        }
+
+        var Paddle = function () {
+            var o = {
+                x: 250,
+                y: 350,
+                speed: 8,
+                image: imageFromPath('paddle.png')
+            }
+            o.moveLeft = function () {
+                o.x -= o.speed
+            }
+            o.moveRight = function () {
+                o.x += o.speed
+            }
+            o.collide = function (ball) {
+                if (ball.x >= o.x && ball.x + ball.image.width <= o.x + o.image.width) {
+                    if (ball.y >= o.y && ball.y + ball.image.height <= o.y + o.image.height) {
+                        log('ff')
+                        return true
+                    }
+                }
+                return false
+            }
+
+            return o
+        }
+
+        var Ball = function () {
+            var o = {
+                x: 100,
+                y: 100,
+                speedX: 5,
+                speedY: 5,
+                image: imageFromPath('ball.png'),
+                active: false
+            }
+            o.move = function () {
+                if (o.active) {
+                    if (o.x > 450 || o.x < 0) {
+                        o.speedX = -o.speedX
+                    }
+                    if (o.y > 350 || o.y < 0) {
+                        o.speedY = -o.speedY
+                    }
+                    o.x += o.speedX
+                    o.y += o.speedY
+                }
+            }
+            o.fire = function () {
+                o.active = true
+            }
+            o.stop = function () {
+                o.active = false
+            }
+            return o
+        }
+
+        var GuaGame = function () {
+            var canvas = document.querySelector('#id-canvas')
+            var context = canvas.getContext('2d')
+
+            var gua = {
+                fps: 1000 / 60,
+                context: context,
+                actions: {},
+                keydowns: {},
+            }
+
+            gua.drawImage = function (guaImg) {
+                gua.context.drawImage(guaImg.image, guaImg.x, guaImg.y)
+            }
+
+            window.addEventListener('keydown', event => {
+                gua.keydowns[event.key] = true
+            })
+
+            window.addEventListener('keyup', event => {
+                gua.keydowns[event.key] = false
+            })
+
+            gua.registerAction = function (key, callback) {
+                gua.actions[key] = callback
+            }
+
+            var timer = setInterval(() => {
+                // 哪个键被按下则执行对应的回调函数
+                for (var key in gua.keydowns) {
+                    if (gua.keydowns[key] && gua.actions[key]) {
+                        gua.actions[key]()
+                    }
+                }
+                gua.update()
+                context.clearRect(0, 0, canvas.width, canvas.height)
+                gua.draw()
+            }, gua.fps)
+
+            return gua
+        }
+
+        var __main = function () {
+            var gua = GuaGame()
+
+            var paddle = Paddle()
+            var ball = Ball()
+
+            gua.registerAction('a', function () {
+                paddle.moveLeft()
+            })
+            gua.registerAction('d', function () {
+                paddle.moveRight()
+            })
+            gua.registerAction('f', function () {
+                ball.fire()
+            })
+            gua.registerAction('s', function () {
+                ball.stop()
+            })
+
+            gua.update = function () {
+                ball.move()
+                if (paddle.collide(ball)) {
+                    ball.speedY *= -1
+                }
+            }
+
+            gua.draw = function () {
+                gua.drawImage(ball)
+                gua.drawImage(paddle)
+            }
+        }
+
+        __main()
+
+    </script>
+</body>
+
+</html>
