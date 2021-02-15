@@ -9,6 +9,7 @@ var Block = function (position) {
     o.kill = function () {
         o.alive = false
     }
+    // 球和砖块相撞
     o.collide = function (ball) {
         if (ball.x >= o.x && ball.x <= o.x + o.image.width) {
             if (ball.y >= o.y && ball.y <= o.y + o.image.height) {

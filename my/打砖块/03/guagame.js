@@ -32,11 +32,14 @@ var GuaGame = function () {
                 gua.actions[key]()
             }
         }
+        // 更新
         gua.update()
+        // 清空画布重新绘制
         context.clearRect(0, 0, canvas.width, canvas.height)
         gua.draw()
 
         setTimeout(() => {
+            // 递归
             runLoop()
         }, 1000 / window.fps)
     }

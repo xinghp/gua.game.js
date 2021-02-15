@@ -25,8 +25,15 @@ var Ball = function () {
     o.stop = function () {
         o.active = false
     }
+    // 方向翻转
     o.reverse = function () {
         o.speedY *= -1
+    }
+    // 鼠标是否点中球
+    o.inMouseDown = function (x, y) {
+        var inX = x >= o.x && x <= o.x + o.image.width
+        var inY = y >= o.y && y <= o.y + o.image.height
+        return inX && inY
     }
     return o
 }

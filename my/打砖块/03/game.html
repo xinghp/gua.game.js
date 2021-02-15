@@ -3,7 +3,11 @@
 把困难的东西拆解成简单的东西
 
 guagame 帧率调节：
-因为 setInterval 执行后无法再改时间参数，因此使用递归 setTimeOut，可以随时更改时间参数
+因为 setInterval 执行后无法再改时间参数，因此使用函数与 setTimeOut 递归，可以随时更改时间参数
+
+球拖动：
+完整的测试需要各种各样的随机情况，要么随机测试，要么做一个球拖拽功能
+
  -->
 <!DOCTYPE html>
 <html lang="en">
@@ -21,91 +25,18 @@ guagame 帧率调节：
 
 <body>
     <canvas id="id-canvas" width="500" height="400"></canvas>
-    <input type="range" id="id-input" min="1" max="100">
+    <div>
+        <input type="range" id="id-input" min="1" max="100">
+        <span class="class-score">分数：0</span>
+    </div>
+
     <script src="utils.js"></script>
     <script src="levels.js"></script>
     <script src="guagame.js"></script>
     <script src="paddle.js"></script>
     <script src="ball.js"></script>
     <script src="block.js"></script>
-    <script>
-        var loadLevel = function (n) {
-            var level = levels[n - 1]
-            var blocks = []
-            for (var i = 0; i < level.length; i++) {
-                var p = level[i]
-                var b = Block(p)
-                blocks.push(b)
-            }
-            return blocks
-        }
-
-        var blocks = []
-        var enableDebugMode = function (enable) {
-            if (!enable) {
-                return
-            }
-            window.addEventListener('keyup', function (e) {
-                if ('12345'.includes(e.key)) {
-                    blocks = loadLevel(Number(e.key))
-                }
-            })
-        }
-
-        var __main = function () {
-            var gua = GuaGame()
-
-            var paddle = Paddle()
-            var ball = Ball()
-
-            enableDebugMode(true)
-            blocks = loadLevel(1)
-
-            document.querySelector('#id-input').addEventListener('change', function (e) {
-                window.fps = Number(document.querySelector('#id-input').value)
-            })
-
-            gua.registerAction('a', function () {
-                paddle.moveLeft()
-            })
-            gua.registerAction('d', function () {
-                paddle.moveRight()
-            })
-            gua.registerAction('f', function () {
-                ball.fire()
-            })
-            gua.registerAction('s', function () {
-                ball.stop()
-            })
-
-            gua.update = function () {
-                ball.move()
-                if (paddle.collide(ball)) {
-                    ball.reverse()
-                }
-
-                blocks.forEach(block => {
-                    if (block.collide(ball)) {
-                        block.kill()
-                        ball.reverse()
-                    }
-                })
-            }
-
-            gua.draw = function () {
-                gua.drawImage(ball)
-                gua.drawImage(paddle)
-                blocks.forEach(block => {
-                    if (block.alive) {
-                        gua.drawImage(block)
-                    }
-                })
-            }
-        }
-
-        __main()
-
-    </script>
+    <script src="main.js"></script>
 </body>
 
 </html>
