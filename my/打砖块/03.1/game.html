@@ -1,19 +1,5 @@
 <!-- 
-高手：
-把困难的东西拆解成简单的东西
-
-guagame 帧率调节：
-因为 setInterval 执行后无法再改时间参数，因此使用函数与 setTimeOut 递归，可以随时更改时间参数
-
-球拖动：
-完整的测试需要各种各样的随机情况，要么随机测试，要么做一个球拖拽功能
-
-todo 所有图片加载完成之后在运行游戏
-
-场景抽象：
-如果要加上 开始画面，游戏画面，结束画面，这些画面的逻辑复杂，不能混在一起，因此要进行场景抽象
-这些画面都是一个个场景，对每个场景进行抽象，可以实现一套代码跑多个场景
-
+基于 03 的场景抽象代码
  -->
 <!DOCTYPE html>
 <html lang="en">
@@ -38,11 +24,12 @@ todo 所有图片加载完成之后在运行游戏
 
     <script src="utils.js"></script>
     <script src="levels.js"></script>
-    <script src="scene.js"></script>
     <script src="guagame.js"></script>
     <script src="paddle.js"></script>
     <script src="ball.js"></script>
     <script src="block.js"></script>
+    <script src="scene.js"></script>
+    <script src="scene_end.js"></script>
     <script src="main.js"></script>
 </body>
 
