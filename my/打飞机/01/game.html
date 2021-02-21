@@ -1,10 +1,4 @@
 <!-- 
-目录分类
-
-scene，guagame 重构为 class 形式：
-按照合适的顺序、小部分代码开始重构
-
-都重构为 class
  -->
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +15,7 @@ scene，guagame 重构为 class 形式：
 </head>
 
 <body>
-    <canvas id="id-canvas" width="500" height="400"></canvas>
+    <canvas id="id-canvas" width="350" height="500"></canvas>
     <div>
         <input type="range" id="id-input" min="1" max="100">
         <span class="class-score">分数：0</span>
@@ -31,9 +25,10 @@ scene，guagame 重构为 class 形式：
 
     <script src="guagame/utils.js"></script>
     <script src="guagame/gua_game.js"></script>
+    <script src="guagame/gua_image.js"></script>
     <script src="guagame/gua_scene.js"></script>
 
-    <script src="scene/main/paddle.js"></script>
+    <script src="scene/main/player.js"></script>
     <script src="scene/main/ball.js"></script>
     <script src="scene/main/block.js"></script>
     <script src="scene/main/scene.js"></script>
