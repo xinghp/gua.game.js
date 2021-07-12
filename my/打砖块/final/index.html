@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.3/theme-chalk/index.min.css" rel="stylesheet">
+    <style>
+        #game {
+            border: 1px solid black;
+        }
+
+        #editor {
+            width: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="400" height="300"></canvas>
+
+    <div id="editor">
+        <div>
+            关卡编辑器：
+            <el-switch v-model="show" active-text="打开" inactive-text="关闭" @change="showEditor">
+            </el-switch>
+        </div>
+        <div>
+            帧率：{{fps}}
+            <el-slider v-model="fps" :min="20" :max="120" @input="changeSpeed"></el-slider>
+        </div>
+        <div v-if="show">
+            <div>
+                关卡序号：
+                <el-input-number v-model="levelNo" @change="switchLevelNo" :min="1" :max="10">
+                </el-input-number>
+            </div>
+            <div>
+                添加砖块：
+                <el-button type="primary" @click="addBlock(1)">一条命</el-button>
+                <el-button type="primary" @click="addBlock(2)">两条命</el-button>
+            </div>
+            <div>
+                <el-button type="primary" @click="saveLevel">保存关卡</el-button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.3/index.js"></script>
+    <script src="./model/model.js"></script>
+    <script src="./common.js"> </script>
+    <script src="./engine/game.js"> </script>
+    <script src="./engine/scene.js"> </script>
+    <script src="./scene/start/scene_start.js"> </script>
+    <script src="./scene/main/scene_main.js"> </script>
+    <script src="./scene/end/scene_end.js"> </script>
+    <script src="./main.js"> </script>
+    <script src="./editor.js"> </script>
+</body>
+
+</html>
