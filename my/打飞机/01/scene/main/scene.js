@@ -8,7 +8,7 @@ class Scene extends GuaScene {
     // 每帧移动 帧一张
     this.bgSpeed = 2;
     // 依次下移两个的临界标志  移动一个需要imgH/speed帧
-    this.skipCount = 250;
+    this.singleBgFrameCount = 500 / this.bgSpeed;
     this.bgs = [];
     for (var i = 0; i < 2; i++) {
       var b = new GuaImage(imageFromPath("img/bg.png"), 0, -500 * i);
@@ -36,10 +36,10 @@ class Scene extends GuaScene {
       return;
     }
     // 依次下移n个，再一次性上移n个
-    this.skipCount--;
+    this.singleBgFrameCount--;
     this.bgSpeed = 2;
-    if (this.skipCount === 0) {
-      this.skipCount = 250;
+    if (this.singleBgFrameCount === 0) {
+      this.singleBgFrameCount = 500 / this.bgSpeed;
       this.bgSpeed = -500;
     }
     for (var i = 0; i < this.bgs.length; i++) {
